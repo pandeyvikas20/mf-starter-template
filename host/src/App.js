@@ -1,19 +1,39 @@
-import React, { useState } from 'react';
-import Model from 'mfe1/Model';
+import React, { useState, Suspense } from 'react';
+import ErrorBoundary from './ErrorBoundary';
 
-import { useStore } from 'store/store';
+const Model = React.lazy(() => import('mfe1/Model'));
 
 function App() {
-  const { count } = useStore();
+  const [showModel, setShowModel] = useState(false);
+
+  const openModel = () => {
+    setShowModel(true);
+  };
+
+  const closeModel = () => {
+    setShowModel(false);
+  };
 
   return (
     <div>
       <h1>Host Up</h1>
-      {/* <Counter /> */}
-      <button onClick={() => setShowModel(!showModel)}>Open Mfe1 Model</button>
-      {showModel && <Model onClose={() => setShowModel(false)} />}
+      <button onClick={openModel}>Open Mfe1 Model</button>
+
+      <Suspense fallback={<div>Loading...</div>}>
+        {showModel && (
+          <ErrorBoundary
+            fallback={
+              <div>Network issue. Unable to load the Model component.</div>
+            }
+          >
+            <Model onClose={closeModel} />
+          </ErrorBoundary>
+        )}
+      </Suspense>
     </div>
   );
 }
+
+// Error boundary component
 
 export default App;
