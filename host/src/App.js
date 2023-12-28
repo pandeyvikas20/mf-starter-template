@@ -1,5 +1,6 @@
 import React, { useState, Suspense } from 'react';
 import ErrorBoundary from './ErrorBoundary';
+import Test from 'store/Test';
 
 const Model = React.lazy(() => import('mfe1/Model'));
 
@@ -30,6 +31,7 @@ function App() {
           </ErrorBoundary>
         )}
       </Suspense>
+      <Test />
     </div>
   );
 }
